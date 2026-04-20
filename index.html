@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materi Google Sheets: VLOOKUP & HLOOKUP untuk SMK</title>
+    <title>Logika & Penalaran: VLOOKUP dan HLOOKUP (Edisi Lengkap)</title>
     <style>
         :root {
             --primary: #1a73e8;
             --success: #1e8e3e;
             --danger: #d93025;
+            --warning: #fbbc04;
             --bg: #f4f7f6;
             --card-bg: #ffffff;
             --text: #333333;
@@ -128,78 +129,208 @@
         .error-box { background: var(--danger); }
         .bonus-result { background: #fbbc04; color: #333; }
 
+        /* Video Summary Styles */
+        .video-summary {
+            background-color: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        /* Flashcards Styles */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .flashcard {
+            background-color: #fff;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .flashcard:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .flashcard .answer { display: none; color: var(--success); font-weight: bold; margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px; width: 100%; }
+        .flashcard.flipped .answer { display: block; }
+        .flashcard.flipped .question { color: #666; font-size: 0.9em; }
+
+        /* Mind Map Styles */
+        .mindmap {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #dadce0;
+            text-align: center;
+        }
+        .mindmap-node {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px;
+            position: relative;
+        }
+        .mindmap-children {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .mindmap-child {
+            background: #e8f0fe;
+            color: var(--primary);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+            width: 40%;
+            min-width: 200px;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #dadce0;
+        }
+        .quiz-question { margin-bottom: 20px; }
+        .quiz-options label {
+            display: block;
+            background: #f1f3f4;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .quiz-options label:hover { background: #e8eaed; }
+        .btn-submit {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .btn-submit:hover { background: #146c2e; }
+        #quiz-result { margin-top: 20px; font-weight: bold; font-size: 1.2rem; }
+
         @media (max-width: 768px) {
             .simulator-grid { grid-template-columns: 1fr; }
+            .mindmap-child { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Logika & Penalaran: VLOOKUP dan HLOOKUP</h1>
-        <p style="text-align: center; color: #5f6368; font-style: italic;">Modul Pembelajaran Praktik untuk Kelas X SMK</p>
 
-        <p>Pernahkah kalian membayangkan menjadi seorang kasir di minimarket? Saat pelanggan membawa sebuah barang, kasir tidak perlu menghafal harga setiap barang. Mereka cukup men-<em>scan</em> <strong>barcode</strong>. Komputer secara otomatis akan menampilkan <strong>Nama Barang</strong> dan <strong>Harganya</strong>. Bagaimana cara kerjanya? Mari kita pelajari logikanya!</p>
+<div class="container">
+    <h1>Logika & Penalaran: VLOOKUP dan HLOOKUP</h1>
+    <p class="subtitle">Modul Pembelajaran Praktik untuk Kelas X SMK - Terintegrasi dengan Notebook LM</p>
 
-        <h2>1. Konsep Dasar "Mencari Tahu"</h2>
-        <p>Bayangkan kalian mencari nama siswa berdasarkan NIS di buku daftar hadir. Langkah nalarnya adalah:</p>
-        <ul>
-            <li><strong>Apa yang dicari?</strong> (Kata Kunci) -> Contoh: NIS "1001"</li>
-            <li><strong>Di mana mencarinya?</strong> (Tabel Sumber) -> Buku Daftar Hadir.</li>
-            <li><strong>Informasi apa yang diambil?</strong> (Hasil) -> Nama Siswa.</li>
-            <li><strong>Harus pas?</strong> -> Ya, harus sama persis (Exact Match).</li>
-        </ul>
+    <h2>Bagian 1: Konsep Dasar "Mencari Tahu"</h2>
+    <p>Sebelum masuk ke rumus, pahami logika dasar kita mencari sebuah informasi. Bayangkan kalian mencari nama siswa berdasarkan Nomor Induk Siswa (NIS) di buku daftar hadir.</p>
+    <ol>
+        <li><strong>Apa yang kalian cari?</strong> (Kunci/Petunjuk utama) &rarr; Misalnya: NIS "1001"</li>
+        <li><strong>Di mana kalian mencarinya?</strong> (Sumber Informasi) &rarr; Buku Daftar Hadir Kelas X.</li>
+        <li><strong>Informasi apa yang ingin diambil?</strong> (Hasil yang diharapkan) &rarr; Nama Siswa (misalnya kolom ke-2 di buku).</li>
+        <li><strong>Apakah harus persis sama?</strong> &rarr; Tentu saja. NIS "1001" tidak boleh dianggap sama dengan "1002". (Pencarian Tepat/Pasti).</li>
+    </ol>
 
-        <h2>2. Membedah VLOOKUP (Vertical)</h2>
-        <p>Digunakan jika data acuan tersusun secara <strong>menurun (kolom)</strong>.</p>
-        <pre>=VLOOKUP( Kata_Kunci, Tabel_Sumber, Kolom_ke_berapa, [0/FALSE] )</pre>
-        <p><span class="highlight">Penting:</span> Kolom pertama di tabel sumber HARUS berisi kata kunci yang dicari.</p>
+    <h2>Bagian 2: Membedah Rumus VLOOKUP (Vertical)</h2>
+    <div class="code-box">
+        =VLOOKUP( Kata_Kunci, Tabel_Sumber, Kolom_ke_berapa, Harus_Sama_Persis? )
+    </div>
 
-        <h2>3. Membedah HLOOKUP (Horizontal)</h2>
-        <p>Sama dengan VLOOKUP, tapi data sumbernya tersusun secara <strong>menyamping (baris)</strong>.</p>
-        <pre>=HLOOKUP( Kata_Kunci, Tabel_Sumber, Baris_ke_berapa, [0/FALSE] )</pre>
-
-        <h2>4. Mari Menalar (Critical Thinking)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Kasus Penalaran</th>
-                    <th>Analisis & Jawaban</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Kenapa muncul error <strong>#N/A</strong>?</td>
-                    <td>Berarti data yang kalian cari tidak ada di tabel sumber. Seperti mencari nama siswa yang belum terdaftar.</td>
-                </tr>
-                <tr>
-                    <td>Bisa cari data ke arah kiri?</td>
-                    <td><strong>Tidak bisa.</strong> VLOOKUP hanya bisa mencari dari kolom kunci ke arah kanan.</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="practice-box">
-            <h2>5. Modul Praktik: Simulasi Kasir</h2>
-            <h3>Langkah 1: Tabel Database (A1:C4)</h3>
-            <pre>
-			Kode | Nama Barang  | Harga
-			P01  | Sabun Mandi  | 5000
-			P02  | Pasta Gigi   | 12000
-			P03  | Sampo        | 15000</pre>
-
-            <h3>Langkah 2: Input Kasir (Sel E2)</h3>
-            <p>Ketik <code>P02</code> di sel E2.</p>
-
-            <h3>Langkah 3: Rumus Otomatis</h3>
-            <p>Di sel F2 (Nama): <code>=VLOOKUP(E2, A2:C4, 2, 0)</code></p>
-            <p>Di sel G2 (Harga): <code>=VLOOKUP(E2, A2:C4, 3, 0)</code></p>
+    <h2>Bagian 3: Ringkasan Video Tutorial</h2>
+    <div class="video-summary">
+        <h3>🎬 Intisari Video: "Cara Menggunakan Rumus VLOOKUP dan HLOOKUP di Google Sheet"</h3>
+        
+        <div style="text-align: center; margin: 25px 0;">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/haX80kAbBC8?si=KUD3H4CWO_oLn9GW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            
+            <p style="margin-top: 10px;">
+                <a href="https://youtu.be/haX80kAbBC8" target="_blank" style="color: #ff9800; font-weight: bold; text-decoration: none; font-size: 1.1rem;">📺 Tonton Video Asli di YouTube</a>
+            </p>
         </div>
 
-		<h2>Bagian 5: Modul Praktik & Simulasi Live</h2>
-    <p>Bayangkan kalian sedang bekerja di bagian administrasi minimarket. Coba langsung ketik kode barang di layar kasir di bawah ini dan lihat bagaimana VLOOKUP bekerja!</p>
+        <p>Berdasarkan transkrip video tutorial yang dianalisis melalui Notebook LM, berikut adalah poin-poin krusial yang ditekankan oleh instruktur:</p>
+        <ul>
+            <li><strong>Bentuk Data Menentukan Rumus:</strong> Gunakan VLOOKUP jika tabel referensi berbentuk vertikal (ke bawah). Gunakan HLOOKUP jika tabel referensi berbentuk horizontal (menyamping ke kanan).</li>
+            <li><strong>Wajib Menggunakan Tanda Absolut ($):</strong> Saat memblok tabel referensi <code>(Tabel_Sumber)</code>, pastikan mengunci rentangnya dengan tombol F4 sehingga muncul tanda dolar (contoh: <code>$A$2:$C$10</code>). Hal ini mencegah rumus error (bergeser) saat di-copy ke baris bawah.</li>
+            <li><strong>Penggunaan FALSE:</strong> Instruktur sangat menekankan penggunaan <code>FALSE</code> (atau angka <code>0</code>) di akhir rumus agar data yang diambil bersifat pasti/tepat (<em>exact match</em>), sehingga meminimalisir kesalahan data yang "mendekati" (<em>approximate match</em>).</li>
+        </ul>
+    </div>
 
+    <h2>Bagian 4: Kartu Soal (Flashcards)</h2>
+    <p>Klik kartu di bawah ini untuk melihat jawaban dan menguji pemahaman teoritis kalian!</p>
+    <div class="flashcard-container">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="question">🔍 Kenapa sering muncul pesan error <strong>#N/A</strong>?</div>
+            <div class="answer">#N/A (Not Available) muncul karena Kata Kunci yang dicari tidak ditemukan di dalam kolom pertama Tabel Sumber.</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="question">⬅️ Bisakah VLOOKUP mencari data ke arah kiri?</div>
+            <div class="answer">TIDAK. VLOOKUP hanya bisa mencari data dari kolom kunci utama ke arah Kanan. (Solusi alternatif: Gunakan INDEX MATCH atau XLOOKUP).</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="question">💲 Apa fungsi tanda dolar ($) pada argumen rentang tabel?</div>
+            <div class="answer">Itu adalah Referensi Absolut. Fungsinya mengunci rentang sel agar tidak bergeser turun/berubah saat rumus di-copy paste ke sel lain.</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="question">⚠️ Apa jadinya jika [is_sorted] diisi TRUE alih-alih FALSE?</div>
+            <div class="answer">Komputer akan melakukan pencarian "mendekati" (Approximate Match). Sangat berbahaya untuk data mutlak seperti ID Karyawan atau Kode Barang karena bisa menghasilkan data yang salah!</div>
+        </div>
+    </div>
+
+    <h2>Bagian 5: Peta Pikiran (Mind Map)</h2>
+    <div class="mindmap">
+        <div class="mindmap-node">Fungsi Pencarian (Lookup) Google Sheets</div>
+        <div class="mindmap-children">
+            <div class="mindmap-child">
+                <strong>VLOOKUP (Vertical)</strong><br>
+                • Data tersusun menurun (Kolom)<br>
+                • Menggunakan Nomor Kolom (Index)<br>
+                • Kolom acuan harus di paling kiri
+            </div>
+            <div class="mindmap-child">
+                <strong>HLOOKUP (Horizontal)</strong><br>
+                • Data tersusun menyamping (Baris)<br>
+                • Menggunakan Nomor Baris (Index)<br>
+                • Baris acuan harus di paling atas
+            </div>
+            <div class="mindmap-child">
+                <strong>Komponen Wajib (Sintaks)</strong><br>
+                1. <code>search_key</code> (Kata Kunci)<br>
+                2. <code>range</code> (Tabel Absolut $)<br>
+                3. <code>index</code> (Kolom/Baris ke-n)
+            </div>
+            <div class="mindmap-child">
+                <strong>Aturan Emas</strong><br>
+                • Selalu gunakan <code>FALSE</code> (Exact Match) untuk data presisi.<br>
+                • Pahami Wildcard (<code>*</code>, <code>?</code>) untuk pencarian teks sebagian.
+            </div>
+        </div>
+    </div>
+
+    <h2>Bagian 6: Modul Praktik & Simulasi Live</h2>
     <div class="interactive-panel">
-        <h3 style="text-align: center; margin-top: 0;">💻 Simulasi 1: Sistem Kasir VLOOKUP</h3>
+        <h3 style="text-align: center; margin-top: 0;">💻 Simulasi Sistem Kasir VLOOKUP</h3>
         <div class="simulator-grid">
             <div class="db-table">
                 <strong>Tabel Sumber (A1:C4)</strong><br><br>
@@ -215,50 +346,50 @@
                 <input type="text" id="vlookup-input" placeholder="Ketik P01, P02, atau P03..." autocomplete="off">
                 <div id="vlookup-nama" class="result-box" style="background: #e8eaed; color: #333;">Nama Barang: -</div>
                 <div id="vlookup-harga" class="result-box" style="background: #e8eaed; color: #333;">Harga: -</div>
-                <p style="font-size: 0.9rem; color: #666; margin-top: 15px;">
-                    Rumus berjalan di latar belakang:<br>
-                    <code>=VLOOKUP(Kode, Tabel_Sumber, 2, 0)</code>
-                </p>
             </div>
         </div>
     </div>
 
-    <div class="interactive-panel" style="background-color: #fef7e0; border-color: #fbbc04;">
-        <h3 style="text-align: center; margin-top: 0; color: #e65100;">📊 Simulasi 2: Bonus Pegawai HLOOKUP</h3>
-        <div class="simulator-grid">
-            <div class="db-table">
-                <strong>Tabel Sumber Horizontal</strong><br><br>
-                Baris 1 (Predikat) | Baik | Cukup | Kurang<br>
-                Baris 2 (Bonus)    | 500K | 200K  | 0
-            </div>
-            <div class="cashier-interface">
-                <strong>Sistem HRD (Input)</strong><br><br>
-                <input type="text" id="hlookup-input" placeholder="Ketik Baik, Cukup, Kurang..." autocomplete="off" style="border-color: #fbbc04;">
-                <div id="hlookup-bonus" class="result-box bonus-result" style="background: #e8eaed; color: #333;">Bonus didapat: -</div>
-                <p style="font-size: 0.9rem; color: #666; margin-top: 15px;">
-                    Rumus berjalan di latar belakang:<br>
-                    <code>=HLOOKUP(Predikat, Tabel_Sumber, 2, 0)</code>
-                </p>
+    <h2>Bagian 7: Kuis Evaluasi Pemahaman</h2>
+    <div class="quiz-container" id="quiz-form">
+        <div class="quiz-question">
+            <strong>1. Apa kepanjangan dari huruf 'V' pada fungsi VLOOKUP?</strong>
+            <div class="quiz-options">
+                <label><input type="radio" name="q1" value="A"> A. Variable</label>
+                <label><input type="radio" name="q1" value="B"> B. Vertical</label>
+                <label><input type="radio" name="q1" value="C"> C. Value</label>
             </div>
         </div>
+        <div class="quiz-question">
+            <strong>2. Jika Anda memiliki tabel tarif pengiriman yang disusun menyamping ke kanan berdasarkan nama kota, rumus apa yang paling tepat digunakan?</strong>
+            <div class="quiz-options">
+                <label><input type="radio" name="q2" value="A"> A. VLOOKUP</label>
+                <label><input type="radio" name="q2" value="B"> B. INDEX MATCH</label>
+                <label><input type="radio" name="q2" value="C"> C. HLOOKUP</label>
+            </div>
+        </div>
+        <div class="quiz-question">
+            <strong>3. Parameter apa yang HARUS ditambahkan di akhir rumus VLOOKUP agar hasil pencarian ID Barang dipastikan sama persis (tidak tertukar dengan barang lain)?</strong>
+            <div class="quiz-options">
+                <label><input type="radio" name="q3" value="A"> A. TRUE</label>
+                <label><input type="radio" name="q3" value="B"> B. EXACT</label>
+                <label><input type="radio" name="q3" value="C"> C. FALSE</label>
+            </div>
+        </div>
+        <button class="btn-submit" onclick="cekKuis()">Kumpulkan Jawaban</button>
+        <div id="quiz-result"></div>
     </div>
-	
-	<script>
-    // Data Database VLOOKUP
+
+</div>
+
+<script>
+    // Logic for VLOOKUP Simulation
     const dbBarang = {
         'P01': { nama: 'Sabun Mandi', harga: 'Rp 5.000' },
         'P02': { nama: 'Pasta Gigi', harga: 'Rp 12.000' },
         'P03': { nama: 'Sampo', harga: 'Rp 15.000' }
     };
 
-    // Data Database HLOOKUP
-    const dbBonus = {
-        'BAIK': 'Rp 500.000',
-        'CUKUP': 'Rp 200.000',
-        'KURANG': 'Rp 0 (Tidak ada bonus)'
-    };
-
-    // Logic for VLOOKUP Simulation
     const vInput = document.getElementById('vlookup-input');
     const vNama = document.getElementById('vlookup-nama');
     const vHarga = document.getElementById('vlookup-harga');
@@ -268,62 +399,47 @@
         
         if (kode === "") {
             vNama.innerHTML = "Nama Barang: -";
-            vNama.className = "result-box";
-            vNama.style.background = "#e8eaed";
-            vNama.style.color = "#333";
+            vNama.style.background = "#e8eaed"; vNama.style.color = "#333";
             vHarga.innerHTML = "Harga: -";
-            vHarga.className = "result-box";
-            vHarga.style.background = "#e8eaed";
-            vHarga.style.color = "#333";
+            vHarga.style.background = "#e8eaed"; vHarga.style.color = "#333";
         } else if (dbBarang[kode]) {
             vNama.innerHTML = "Nama Barang: " + dbBarang[kode].nama;
-            vNama.className = "result-box";
-            vNama.style.background = "#34a853";
-            vNama.style.color = "white";
-            
+            vNama.style.background = "#34a853"; vNama.style.color = "white";
             vHarga.innerHTML = "Harga: " + dbBarang[kode].harga;
-            vHarga.className = "result-box";
-            vHarga.style.background = "#34a853";
-            vHarga.style.color = "white";
+            vHarga.style.background = "#34a853"; vHarga.style.color = "white";
         } else {
             vNama.innerHTML = "Nama Barang: #N/A";
-            vNama.className = "result-box error-box";
-            vNama.style.color = "white";
-            
+            vNama.style.background = "#d93025"; vNama.style.color = "white";
             vHarga.innerHTML = "Harga: #N/A";
-            vHarga.className = "result-box error-box";
-            vHarga.style.color = "white";
+            vHarga.style.background = "#d93025"; vHarga.style.color = "white";
         }
     });
 
-    // Logic for HLOOKUP Simulation
-    const hInput = document.getElementById('hlookup-input');
-    const hBonus = document.getElementById('hlookup-bonus');
+    // Logic for Quiz Evaluation
+    function cekKuis() {
+        let score = 0;
+        let q1 = document.querySelector('input[name="q1"]:checked');
+        let q2 = document.querySelector('input[name="q2"]:checked');
+        let q3 = document.querySelector('input[name="q3"]:checked');
+        let resultBox = document.getElementById('quiz-result');
 
-    hInput.addEventListener('input', function() {
-        let predikat = this.value.trim().toUpperCase();
-        
-        if (predikat === "") {
-            hBonus.innerHTML = "Bonus didapat: -";
-            hBonus.className = "result-box bonus-result";
-            hBonus.style.background = "#e8eaed";
-            hBonus.style.color = "#333";
-        } else if (dbBonus[predikat]) {
-            hBonus.innerHTML = "Bonus didapat: " + dbBonus[predikat];
-            hBonus.className = "result-box bonus-result";
-            hBonus.style.background = "#fbbc04";
-            hBonus.style.color = "#333";
+        if(!q1 || !q2 || !q3) {
+            resultBox.innerHTML = "<span style='color: #d93025;'>Harap jawab semua pertanyaan terlebih dahulu!</span>";
+            return;
+        }
+
+        if(q1.value === "B") score += 33.3;
+        if(q2.value === "C") score += 33.3;
+        if(q3.value === "C") score += 33.4; // Total 100
+
+        let finalScore = Math.round(score);
+        if(finalScore === 100) {
+            resultBox.innerHTML = `<span style='color: #1e8e3e;'>Luar Biasa! Nilai Anda ${finalScore}. Anda sudah menguasai teori dasar Lookup!</span>`;
         } else {
-            hBonus.innerHTML = "Bonus didapat: #N/A";
-            hBonus.className = "result-box error-box";
-            hBonus.style.color = "white";
+            resultBox.innerHTML = `<span style='color: #fbbc04;'>Nilai Anda ${finalScore}. Yuk, baca lagi ringkasan materi dan coba lagi!</span>`;
         }
-    });
+    }
 </script>
-	
-        <footer style="margin-top: 40px; font-size: 0.8em; text-align: center; color: #888;">
-            &copy; 2026 Modul Digital SMK - Materi Google Sheets
-        </footer>
-    </div>
+
 </body>
 </html>
