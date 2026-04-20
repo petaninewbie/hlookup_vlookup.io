@@ -330,7 +330,7 @@
 
     <h2>Bagian 6: Modul Praktik & Simulasi Live</h2>
     <div class="interactive-panel">
-        <h3 style="text-align: center; margin-top: 0;">💻 Simulasi Sistem Kasir VLOOKUP</h3>
+        <h3 style="text-align: center; margin-top: 0;">💻 Simulasi 1: Sistem Kasir VLOOKUP</h3>
         <div class="simulator-grid">
             <div class="db-table">
                 <strong>Tabel Sumber (A1:C4)</strong><br><br>
@@ -346,11 +346,36 @@
                 <input type="text" id="vlookup-input" placeholder="Ketik P01, P02, atau P03..." autocomplete="off">
                 <div id="vlookup-nama" class="result-box" style="background: #e8eaed; color: #333;">Nama Barang: -</div>
                 <div id="vlookup-harga" class="result-box" style="background: #e8eaed; color: #333;">Harga: -</div>
+                <p style="font-size: 0.9rem; color: #666; margin-top: 15px;">
+                    Rumus berjalan di latar belakang:<br>
+                    <code>=VLOOKUP(Kode, Tabel_Sumber, 2, 0)</code>
+                </p>
             </div>
         </div>
     </div>
 
-    <h2>Bagian 7: Kuis Evaluasi Pemahaman</h2>
+    <div class="interactive-panel" style="background-color: #fef7e0; border-color: #fbbc04;">
+        <h3 style="text-align: center; margin-top: 0; color: #e65100;">📊 Simulasi 2: Bonus Pegawai HLOOKUP</h3>
+        <div class="simulator-grid">
+            <div class="db-table">
+                <strong>Tabel Sumber Horizontal</strong><br><br>
+                Baris 1 (Predikat) | Baik | Cukup | Kurang<br>
+                Baris 2 (Bonus)    | 500K | 200K  | 0
+            </div>
+            <div class="cashier-interface">
+                <strong>Sistem HRD (Input)</strong><br><br>
+                <input type="text" id="hlookup-input" placeholder="Ketik Baik, Cukup, Kurang..." autocomplete="off" style="border-color: #fbbc04;">
+                <div id="hlookup-bonus" class="result-box bonus-result" style="background: #e8eaed; color: #333;">Bonus didapat: -</div>
+                <p style="font-size: 0.9rem; color: #666; margin-top: 15px;">
+                    Rumus berjalan di latar belakang:<br>
+                    <code>=HLOOKUP(Predikat, Tabel_Sumber, 2, 0)</code>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+   <h2>Bagian 7: Kuis Evaluasi Pemahaman</h2>
     <div class="quiz-container" id="quiz-form">
         <div class="quiz-question">
             <strong>1. Apa kepanjangan dari huruf 'V' pada fungsi VLOOKUP?</strong>
@@ -381,15 +406,22 @@
     </div>
 
 </div>
-
 <script>
-    // Logic for VLOOKUP Simulation
+    // Data Database VLOOKUP
     const dbBarang = {
         'P01': { nama: 'Sabun Mandi', harga: 'Rp 5.000' },
         'P02': { nama: 'Pasta Gigi', harga: 'Rp 12.000' },
         'P03': { nama: 'Sampo', harga: 'Rp 15.000' }
     };
 
+    // Data Database HLOOKUP
+    const dbBonus = {
+        'BAIK': 'Rp 500.000',
+        'CUKUP': 'Rp 200.000',
+        'KURANG': 'Rp 0 (Tidak ada bonus)'
+    };
+
+    // Logic for VLOOKUP Simulation
     const vInput = document.getElementById('vlookup-input');
     const vNama = document.getElementById('vlookup-nama');
     const vHarga = document.getElementById('vlookup-harga');
@@ -399,22 +431,57 @@
         
         if (kode === "") {
             vNama.innerHTML = "Nama Barang: -";
-            vNama.style.background = "#e8eaed"; vNama.style.color = "#333";
+            vNama.className = "result-box";
+            vNama.style.background = "#e8eaed";
+            vNama.style.color = "#333";
             vHarga.innerHTML = "Harga: -";
-            vHarga.style.background = "#e8eaed"; vHarga.style.color = "#333";
+            vHarga.className = "result-box";
+            vHarga.style.background = "#e8eaed";
+            vHarga.style.color = "#333";
         } else if (dbBarang[kode]) {
             vNama.innerHTML = "Nama Barang: " + dbBarang[kode].nama;
-            vNama.style.background = "#34a853"; vNama.style.color = "white";
+            vNama.className = "result-box";
+            vNama.style.background = "#34a853";
+            vNama.style.color = "white";
+            
             vHarga.innerHTML = "Harga: " + dbBarang[kode].harga;
-            vHarga.style.background = "#34a853"; vHarga.style.color = "white";
+            vHarga.className = "result-box";
+            vHarga.style.background = "#34a853";
+            vHarga.style.color = "white";
         } else {
             vNama.innerHTML = "Nama Barang: #N/A";
-            vNama.style.background = "#d93025"; vNama.style.color = "white";
+            vNama.className = "result-box error-box";
+            vNama.style.color = "white";
+            
             vHarga.innerHTML = "Harga: #N/A";
-            vHarga.style.background = "#d93025"; vHarga.style.color = "white";
+            vHarga.className = "result-box error-box";
+            vHarga.style.color = "white";
         }
     });
 
+    // Logic for HLOOKUP Simulation
+    const hInput = document.getElementById('hlookup-input');
+    const hBonus = document.getElementById('hlookup-bonus');
+
+    hInput.addEventListener('input', function() {
+        let predikat = this.value.trim().toUpperCase();
+        
+        if (predikat === "") {
+            hBonus.innerHTML = "Bonus didapat: -";
+            hBonus.className = "result-box bonus-result";
+            hBonus.style.background = "#e8eaed";
+            hBonus.style.color = "#333";
+        } else if (dbBonus[predikat]) {
+            hBonus.innerHTML = "Bonus didapat: " + dbBonus[predikat];
+            hBonus.className = "result-box bonus-result";
+            hBonus.style.background = "#fbbc04";
+            hBonus.style.color = "#333";
+        } else {
+            hBonus.innerHTML = "Bonus didapat: #N/A";
+            hBonus.className = "result-box error-box";
+            hBonus.style.color = "white";
+        }
+    });
     // Logic for Quiz Evaluation
     function cekKuis() {
         let score = 0;
